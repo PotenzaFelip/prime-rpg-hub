@@ -1,33 +1,44 @@
-# 🎲 RPG Dice Roller 3D
+# 🎲 Mesa de RPG Virtual - 3D Dice Roller & Sheet
 
-Um simulador de dados 3D de alta performance desenvolvido para mestres e jogadores de RPG. O projeto utiliza física realista e renderização acelerada por hardware para proporcionar uma experiência imersiva diretamente no navegador.
+Uma aplicação web completa e leve para jogadores e mestres de RPG. Conta com um simulador de dados 3D com física realista, ficha de personagem editável e diário de campanha, tudo com salvamento automático local.
 
+![Versão](https://img.shields.io/badge/version-1.2.0-blue)
 ![GitHub License](https://img.shields.io/github/license/PotenzaFelip/dice-roller-rpg)
 ![GitHub Pages](https://img.shields.io/badge/Deploy-GitHub%20Pages-brightgreen)
 
 ## 🚀 Funcionalidades
 
-- **Física Realista:** Utiliza o motor `Cannon.js` para colisões, gravidade e rotações autênticas.
-- **Gráficos 3D:** Renderização via `Three.js` com suporte a luzes dinâmicas e sombras.
-- **Histórico Automático:** Painel lateral que registra todas as rolagens e calcula a soma total automaticamente.
-- **Ajustes Dinâmicos (Menu Hambúrguer):**
-  - Controle de Gravidade.
-  - Ajuste de Impulso (Força do lançamento).
-  - Configuração de Damping (Frenagem do giro).
-  - Botão de Reset para padrões de fábrica.
-- **Sprites de Leitura:** Exibição clara do resultado acima de cada dado após a parada.
-- **Responsivo:** Interface otimizada para Desktop e Mobile.
+* **Simulador de Dados 3D:** Rolagens realistas de D4, D6, D8, D10, D12 e D20 usando `Three.js` e `Cannon.js`.
+* **Física Avançada:** Colisões reais, barreiras invisíveis na mesa e detecção inteligente de resultados.
+* **Histórico de Rolagens:** Log detalhado com a soma total de todos os dados na mesa.
+* **Ficha de Personagem:** Gerenciamento de atributos (FOR, DES, CON, etc.) e inventário.
+* **Diário de Campanha:** Espaço dedicado para anotações de sessões.
+* **Persistência de Dados (Auto-Save):** Todos os dados da ficha e do diário são salvos no `localStorage` do navegador — nunca perca seu progresso ao dar F5.
+* **Interface Responsiva:** Navegação lateral intuitiva para alternar entre dados, ficha e notas.
 
 ## 🛠️ Tecnologias Utilizadas
 
-- [Three.js](https://threejs.org/): Renderização da cena 3D e geometrias dos dados (D4, D6, D8, D10, D12, D20).
-- [Cannon.js](https://github.com/schteppe/cannon.js): Simulação física de corpos rígidos.
-- [HTML5/CSS3](https://developer.mozilla.org/pt-BR/docs/Web/HTML): Estruturação da UI e animações de interface.
-- [JavaScript (ES6+)](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript): Lógica de controle, cálculos de soma e manipulação do DOM.
+* **Three.js:** Renderização 3D de alta performance.
+* **Cannon.js:** Motor de física para gravidade e colisões.
+* **JavaScript (ES6+):** Lógica de aplicação e manipulação de DOM.
+* **HTML5/CSS3:** Estrutura e estilização moderna (Dark Mode).
 
-## 🎮 Como Usar
+## 📦 Como usar
 
-1. **Rolar Dados:** Clique nos botões coloridos na parte inferior para adicionar dados à mesa.
-2. **Rolar Mesa:** Use o botão "ROLAR MESA" para relançar todos os dados presentes com força aleatória.
-3. **Histórico:** Veja o somatório no canto superior esquerdo. Use "LIMPAR CHAT" para reiniciar o log.
-4. **Configurações:** Clique no ícone ☰ no canto superior direito para ajustar a física conforme sua preferência.
+Não é necessário instalar nada. Basta abrir o arquivo `index.html` em qualquer navegador moderno ou acessar via GitHub Pages.
+
+1.  Clone o repositório:
+    ```bash
+    git clone https://github.com/PotenzaFelip/dice-roller-rpg.git
+    ```
+2.  Abra o arquivo `index.html`.
+
+## ⚙️ Customização
+
+No menu de configurações (ícone ☰), você pode ajustar:
+* **Gravidade:** Altere a velocidade de queda dos dados.
+* **Impulso:** Ajuste a força com que os dados são lançados.
+* **Atrito:** Controle o quanto os dados rolam antes de parar.
+
+---
+Desenvolvido por PotenzaFelip
