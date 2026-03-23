@@ -4,51 +4,65 @@
     <meta charset="UTF-8">
     <title>Mesa de RPG Virtual - Dados & Fichas</title>
     <style>
-        :root { --primary: #3498db; --bg: #0a0a0a; --panel: rgba(10,10,10,0.98); --border: #333; }
+        :root { --primary: #3498db; --bg: #0a0a0a; --panel: rgba(10,10,10,0.98); --border: #333; --accent: #e74c3c; }
         body { margin: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: white; display: flex; }
 
-        /* SIDEBAR DE NAVEGAÇÃO */
+        /* SIDEBAR */
         #sidebar { width: 70px; background: #111; border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding-top: 20px; z-index: 2000; height: 100vh; }
         .nav-item { margin-bottom: 25px; cursor: pointer; font-size: 24px; opacity: 0.4; transition: 0.3s; padding: 10px; border-radius: 10px; text-align: center; }
         .nav-item.active { opacity: 1; color: var(--primary); background: rgba(52, 152, 219, 0.1); }
         .nav-item:hover { opacity: 1; background: #222; }
 
-        /* VIEWS (TELAS) */
+        /* VIEWS */
         .view { flex: 1; height: 100vh; position: relative; display: none; overflow: hidden; }
         .view.active { display: block; }
 
-        /* TELA DE DADOS - UI */
+        /* TELA DE DADOS */
         #ui-dice-box { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; background: var(--panel); padding: 18px; border-radius: 15px; z-index: 100; border: 1px solid #444; box-shadow: 0 0 25px rgba(0,0,0,0.7); }
         .dice-btn { padding: 12px 18px; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; color: white; background: #2a2a2a; transition: 0.2s; min-width: 65px; font-size: 14px; }
         .dice-btn:hover { background: #444; transform: translateY(-3px); }
-        
         .d4 { border-bottom: 4px solid #e74c3c; } .d6 { border-bottom: 4px solid #e67e22; } .d8 { border-bottom: 4px solid #f1c40f; }
         .d10 { border-bottom: 4px solid #9b59b6; } .d12 { border-bottom: 4px solid #2ecc71; } .d20 { border-bottom: 4px solid #3498db; }
 
         #side-panel { position: absolute; top: 20px; left: 20px; width: 300px; z-index: 10; display: flex; flex-direction: column; gap: 10px; }
         #chat { max-height: 500px; background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 15px; overflow-y: auto; box-shadow: 5px 5px 20px rgba(0,0,0,0.6); pointer-events: all; }
-        .btn-clear-chat { background: #1a1a1a; font-size: 11px; padding: 8px 12px; min-width: auto; align-self: flex-start; color: #eee; border: 1px solid #c0392b; border-radius: 5px; cursor: pointer; pointer-events: all; }
         .sum-entry { background: rgba(46, 204, 113, 0.1); border-left: 5px solid #2ecc71; padding: 12px; margin-bottom: 12px; border-radius: 6px; animation: slideIn 0.3s ease; }
         .sum-entry strong { font-size: 22px; color: #2ecc71; display: block; }
         .formula { color: #aaa; font-size: 13px; margin-top: 6px; font-family: monospace; display: block; }
 
-        /* CONFIGURAÇÕES */
-        #menu-btn { position: absolute; top: 20px; right: 20px; z-index: 1000; background: #222; border: 1px solid #444; padding: 10px; border-radius: 8px; cursor: pointer; font-size: 20px; }
+        /* CONFIGS FÍSICA */
+        #menu-btn { position: absolute; top: 20px; right: 20px; z-index: 1000; background: #222; border: 1px solid #444; padding: 10px; border-radius: 8px; cursor: pointer; }
         #config-panel { position: absolute; top: 70px; right: 20px; width: 250px; background: var(--panel); border: 1px solid #444; border-radius: 12px; padding: 20px; z-index: 999; display: none; }
-        .config-group { margin-bottom: 18px; }
-        .config-group label { display: block; font-size: 11px; color: var(--primary); text-transform: uppercase; margin-bottom: 8px; }
-        .config-val { float: right; color: #fff; font-weight: bold; }
-        .btn-reset { width: 100%; padding: 10px; background: #c0392b; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .config-group { margin-bottom: 15px; font-size: 12px; }
+        .config-val { float: right; color: var(--primary); font-weight: bold; }
+        
+        .btn-reset { width: 100%; padding: 8px; background: #444; border: none; color: white; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+        .btn-clear-chat { background: #1a1a1a; font-size: 11px; padding: 8px 12px; min-width: auto; align-self: flex-start; color: #eee; border: 1px solid #c0392b; border-radius: 5px; cursor: pointer; transition: 0.2s; }
+        .btn-clear-chat:hover { background: #c0392b; color: white; }
+        /* FICHA TIPO D&D */
+        .sheet-container { padding: 30px; background: #0f0f0f; height: 100vh; overflow-y: auto; box-sizing: border-box; }
+        .dnd-grid { display: grid; grid-template-columns: 120px 250px 1fr 280px; gap: 20px; max-width: 1300px; margin: 0 auto; }
+        
+        .sheet-header { grid-column: 1 / -1; display: grid; grid-template-columns: 1.5fr 3fr; gap: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 20px; margin-bottom: 20px; }
+        .header-box { background: #1a1a1a; padding: 12px; border-radius: 8px; border: 1px solid #333; }
+        .header-box label { font-size: 10px; color: var(--primary); font-weight: bold; display: block; margin-bottom: 5px; }
 
-        /* TELA DE FICHA E NOTAS */
-        .extra-view-container { background: #0f0f0f; height: 100vh; overflow-y: auto; padding: 40px; box-sizing: border-box; }
-        .sheet-card { background: #1a1a1a; padding: 30px; border-radius: 15px; border: 1px solid var(--border); max-width: 800px; margin: 0 auto; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
-        .field { margin-bottom: 20px; }
-        .field label { display: block; color: var(--primary); font-size: 11px; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
-        input, textarea { width: 100%; background: #222; border: 1px solid #444; color: white; padding: 12px; border-radius: 6px; box-sizing: border-box; outline: none; transition: 0.2s; }
-        input:focus, textarea:focus { border-color: var(--primary); }
-        .stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin: 20px 0; }
+        .attr-col { display: flex; flex-direction: column; gap: 15px; }
+        .attr-box { background: #1a1a1a; border: 2px solid #444; border-radius: 12px; text-align: center; padding: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .attr-box label { font-size: 11px; color: var(--primary); font-weight: bold; }
+        .attr-box input { width: 60px; font-size: 24px; text-align: center; background: none; border: none; color: white; font-weight: bold; outline: none; }
 
+        .sheet-block { background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 15px; margin-bottom: 15px; }
+        .sheet-block h4 { margin: 0 0 12px 0; font-size: 11px; color: var(--primary); text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        
+        textarea { background: rgba(0,0,0,0.2); border: 1px solid #222; color: #ddd; width: 100%; resize: vertical; padding: 10px; border-radius: 5px; box-sizing: border-box; }
+        input[type="text"], input[type="number"] { background: rgba(255,255,255,0.05); border: 1px solid #333; color: white; border-radius: 4px; padding: 8px; width: 100%; box-sizing: border-box; }
+
+        .combat-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .combat-box { background: #222; border-radius: 8px; text-align: center; padding: 10px; border: 2px solid #444; }
+
+        .skill-item { display: flex; align-items: center; gap: 10px; font-size: 13px; margin-bottom: 5px; }
+        
         @keyframes slideIn { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
     </style>
 </head>
@@ -58,6 +72,7 @@
         <div class="nav-item active" onclick="switchView('dice', this)" title="Dados 3D">🎲</div>
         <div class="nav-item" onclick="switchView('sheet', this)" title="Ficha">📜</div>
         <div class="nav-item" onclick="switchView('notes', this)" title="Notas">✍️</div>
+        <div id="notes-camp" class="nav-item" onclick="switchView('campaign', this)" title="Campanha">📖</div>
     </nav>
 
     <div id="view-dice" class="view active">
@@ -104,35 +119,126 @@
         </div>
     </div>
 
-    <div id="view-sheet" class="view">
-        <div class="extra-view-container">
-            <div class="sheet-card">
-                <h1 style="margin:0 0 20px 0; font-size:24px; color:var(--primary)">Ficha de Personagem</h1>
-                <div class="field">
-                    <label>Nome do Personagem</label>
-                    <input type="text" id="char-name" placeholder="Ex: Lira Trigon">
+   <div id="view-sheet" class="view">
+        <div class="sheet-container">
+            <div class="dnd-grid">
+                
+                <div class="sheet-header">
+                    <div class="header-box">
+                        <label>NOME DO PERSONAGEM</label>
+                        <input type="text" id="char-name" placeholder="Ex: Lira Trigon">
+                    </div>
+                    <div class="header-box" style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px;">
+                        <div><label>CLASSE & NÍVEL</label><input type="text" id="class-lv"></div>
+                        <div><label>ANTECEDENTE</label><input type="text" id="background"></div>
+                        <div><label>NOME DO JOGADOR</label><input type="text" id="player-name"></div>
+                        <div><label>RAÇA</label><input type="text" id="race"></div>
+                        <div><label>TENDÊNCIA</label><input type="text" id="alignment"></div>
+                        <div><label>EXP</label><input type="number" id="xp"></div>
+                    </div>
                 </div>
-                <div class="stats-grid">
-                    <div class="field"><label>FOR</label><input type="number" class="char-stat" value="10"></div>
-                    <div class="field"><label>DES</label><input type="number" class="char-stat" value="10"></div>
-                    <div class="field"><label>CON</label><input type="number" class="char-stat" value="10"></div>
-                    <div class="field"><label>INT</label><input type="number" class="char-stat" value="10"></div>
-                    <div class="field"><label>SAB</label><input type="number" class="char-stat" value="10"></div>
-                    <div class="field"><label>CAR</label><input type="number" class="char-stat" value="10"></div>
+
+                <div class="attr-col">
+                    <div class="attr-box"><label>FORÇA</label><br><input type="number" id="str" value="10"></div>
+                    <div class="attr-box"><label>DESTREZA</label><br><input type="number" id="dex" value="10"></div>
+                    <div class="attr-box"><label>CONST.</label><br><input type="number" id="con" value="10"></div>
+                    <div class="attr-box"><label>INTEL.</label><br><input type="number" id="int" value="10"></div>
+                    <div class="attr-box"><label>SABED.</label><br><input type="number" id="wis" value="10"></div>
+                    <div class="attr-box"><label>CARISMA</label><br><input type="number" id="cha" value="10"></div>
+
+                    <div class="sheet-block" style="margin-top:10px;">
+                        <h4 style="font-size:9px;">Testes de Resistência</h4>
+                        <div class="skill-item"><input type="checkbox" id="sv-str"> Força</div>
+                        <div class="skill-item"><input type="checkbox" id="sv-dex"> Destreza</div>
+                        <div class="skill-item"><input type="checkbox" id="sv-con"> Const.</div>
+                        <div class="skill-item"><input type="checkbox" id="sv-int"> Intel.</div>
+                        <div class="skill-item"><input type="checkbox" id="sv-wis"> Sabed.</div>
+                        <div class="skill-item"><input type="checkbox" id="sv-cha"> Carisma</div>
+                    </div>
                 </div>
-                <div class="field">
-                    <label>Inventário e Equipamentos</label>
-                    <textarea id="char-inventory" rows="8" placeholder="O que você carrega..."></textarea>
+
+                <div>
+                    <div class="sheet-block">
+                        <h4>Status</h4>
+                        <div class="skill-item"><input type="number" id="insp" style="width:45px"> Inspiração</div>
+                        <div class="skill-item"><input type="number" id="prof" style="width:45px"> Bônus Prof.</div>
+                    </div>
+                    <div class="sheet-block">
+                        <h4>Perícias</h4>
+                        <div id="skills-list" style="font-size: 11px;">
+                            <div class="skill-item"><input type="checkbox" id="sk-acro"> Acrobacia (Des)</div>
+                            <div class="skill-item"><input type="checkbox" id="sk-anim"> Adestrar Animais (Sab)</div>
+                            <div class="skill-item"><input type="checkbox" id="sk-arc"> Arcanismo (Int)</div>
+                            <div class="skill-item"><input type="checkbox" id="sk-athl"> Atletismo (For)</div>
+                            <div class="skill-item"><input type="checkbox" id="sk-perf"> Atuação (Car)</div>
+                            <div class="skill-item"><input type="checkbox" id="sk-decep"> Enganação (Car)</div>
+                            <div class="skill-item"><input type="checkbox" id="sk-stea"> Furtividade (Des)</div>
+                            <div class="skill-item"><input type="checkbox" id="sk-hist"> História (Int)</div>
+                            <div class="skill-item"><input type="checkbox" id="sk-intim"> Intimidação (Car)</div>
+                            <div class="skill-item"><input type="checkbox" id="sk-insig"> Intuição (Sab)</div>
+                            <div class="skill-item"><input type="checkbox" id="sk-inv"> Investigação (Int)</div>
+                            <div class="skill-item"><input type="checkbox" id="sk-med"> Medicina (Sab)</div>
+                            <div class="skill-item"><input type="checkbox" id="sk-nat"> Natureza (Int)</div>
+                            <div class="skill-item"><input type="checkbox" id="sk-perc"> Percepção (Sab)</div>
+                            <div class="skill-item"><input type="checkbox" id="sk-pers"> Persuasão (Car)</div>
+                            <div class="skill-item"><input type="checkbox" id="sk-slei"> Prestidigitação (Des)</div>
+                            <div class="skill-item"><input type="checkbox" id="sk-rel"> Religião (Int)</div>
+                            <div class="skill-item"><input type="checkbox" id="sk-surv"> Sobrevivência (Sab)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="combat-row">
+                        <div class="combat-box"><label>CA</label><br><input type="number" id="ac" style="width:45px"></div>
+                        <div class="combat-box"><label>INI.</label><br><input type="number" id="init" style="width:45px"></div>
+                        <div class="combat-box"><label>DESL.</label><br><input type="number" id="speed" style="width:45px"></div>
+                    </div>
+                    <div class="sheet-block">
+                        <h4>Pontos de Vida</h4>
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <div><label style="font-size:9px">Atuais</label><input type="number" id="hp-curr"></div>
+                            <div><label style="font-size:9px">Máx</label><input type="number" id="hp-max"></div>
+                        </div>
+                    </div>
+                    <div class="sheet-block">
+                        <h4>Ataques & Conjuração</h4>
+                        <textarea id="attacks" rows="14" placeholder="Arma | Bônus | Dano..."></textarea>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="sheet-block">
+                        <h4>Personalidade & Ideais</h4>
+                        <textarea id="personality" rows="8"></textarea>
+                    </div>
+                    <div class="sheet-block">
+                        <h4>Equipamento</h4>
+                        <textarea id="equipment" rows="12"></textarea>
+                    </div>
+                    <div class="sheet-block">
+                        <h4>Características</h4>
+                        <textarea id="features" rows="6"></textarea>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <div id="view-notes" class="view">
-        <div class="extra-view-container">
-            <div class="sheet-card">
-                <h1 style="margin:0 0 20px 0; font-size:24px; color:var(--primary)">Diário de Campanha</h1>
-                <textarea id="campaign-notes" style="height: 60vh; font-family: 'Courier New', Courier, monospace;" placeholder="Escreva aqui os eventos da sessão..."></textarea>
+        <div class="sheet-container">
+            <div class="sheet-block" style="max-width:900px; margin:0 auto;">
+                <h4>Diário de Aventuras</h4>
+                <textarea id="diary" rows="30" placeholder="Suas anotações pessoais aqui..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-campaign" class="view">
+        <div class="sheet-container">
+            <div class="sheet-block" style="max-width:900px; margin:0 auto;">
+                <h4 style="color:var(--primary)">Diário de Campanha / Lore</h4>
+                <textarea id="campaign-notes" rows="30" style="font-family: 'Courier New', Courier, monospace;" placeholder="Eventos globais, NPCs, locais descobertos..."></textarea>
             </div>
         </div>
     </div>
@@ -147,33 +253,37 @@
         const DEFAULTS = { grav: -85, force: 30, damp: 0.7, stop: 0.4 };
         let cfg = { ...DEFAULTS };
 
-        // --- SISTEMA DE PERSISTÊNCIA (LOCAL STORAGE) ---
+        // --- PERSISTÊNCIA COMPLETA (CORRIGIDO) ---
         function saveAllData() {
-            const data = {
-                name: document.getElementById('char-name').value,
-                stats: Array.from(document.querySelectorAll('.char-stat')).map(i => i.value),
-                inventory: document.getElementById('char-inventory').value,
-                notes: document.getElementById('campaign-notes').value
-            };
-            localStorage.setItem('potenza_rpg_data', JSON.stringify(data));
+            const data = {};
+            document.querySelectorAll('input, textarea').forEach(el => {
+                if (el.id) {
+                    data[el.id] = el.type === 'checkbox' ? el.checked : el.value;
+                }
+            });
+            localStorage.setItem('rpg_suite_pro_data', JSON.stringify(data));
         }
 
         function loadAllData() {
-            const saved = localStorage.getItem('potenza_rpg_data');
+            const saved = localStorage.getItem('rpg_suite_pro_data');
             if (saved) {
                 const data = JSON.parse(saved);
-                document.getElementById('char-name').value = data.name || "";
-                const stats = document.querySelectorAll('.char-stat');
-                if(data.stats) data.stats.forEach((val, i) => { if(stats[i]) stats[i].value = val; });
-                document.getElementById('char-inventory').value = data.inventory || "";
-                document.getElementById('campaign-notes').value = data.notes || "";
+                Object.keys(data).forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        if (el.type === 'checkbox') el.checked = data[id];
+                        else el.value = data[id];
+                    }
+                });
             }
         }
 
         // --- NAVEGAÇÃO ---
         function switchView(id, el) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.getElementById('view-' + id).classList.add('active');
+            const target = document.getElementById('view-' + id);
+            if (target) target.classList.add('active');
+            
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             el.classList.add('active');
             if(id === 'dice') onResize();
@@ -230,23 +340,25 @@
             world = new CANNON.World();
             world.gravity.set(0, cfg.grav, 0);
 
-            // Chão Físico e Visual
             const floorBody = new CANNON.Body({ mass: 0, shape: new CANNON.Box(new CANNON.Vec3(25, 0.5, 25)) });
             world.addBody(floorBody);
             const floorMesh = new THREE.Mesh(new THREE.BoxGeometry(50, 1, 50), new THREE.MeshPhongMaterial({color: 0x111111}));
             floorMesh.position.y = -0.5; floorMesh.receiveShadow = true;
             scene.add(floorMesh);
 
-            // Paredes Invisíveis
             createWall(0, 5, 25, 50, 10, 1); createWall(0, 5, -25, 50, 10, 1);
             createWall(25, 5, 0, 1, 10, 50); createWall(-25, 5, 0, 1, 10, 50);
 
             animate();
             loadAllData();
             
-            // Ativa o auto-save
-            document.querySelectorAll('input, textarea').forEach(el => {
-                el.addEventListener('input', saveAllData);
+            // Auto-save global corrigido
+            document.addEventListener('input', (e) => {
+                const physicsIds = ['grav', 'force', 'damp', 'stop'];
+                if (!physicsIds.includes(e.target.id)) saveAllData();
+            });
+            document.addEventListener('change', (e) => {
+                if (e.target.type === 'checkbox') saveAllData();
             });
         }
 
