@@ -2,89 +2,139 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>RPG Dice Roller</title>
+    <title>Mesa de RPG Virtual - Dados & Fichas</title>
     <style>
-        body { margin: 0; overflow: hidden; background: #0a0a0a; font-family: 'Segoe UI', Tahoma, sans-serif; color: white; }
+        :root { --primary: #3498db; --bg: #0a0a0a; --panel: rgba(10,10,10,0.98); --border: #333; }
+        body { margin: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: white; display: flex; }
+
+        /* SIDEBAR DE NAVEGAÇÃO */
+        #sidebar { width: 70px; background: #111; border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding-top: 20px; z-index: 2000; height: 100vh; }
+        .nav-item { margin-bottom: 25px; cursor: pointer; font-size: 24px; opacity: 0.4; transition: 0.3s; padding: 10px; border-radius: 10px; text-align: center; }
+        .nav-item.active { opacity: 1; color: var(--primary); background: rgba(52, 152, 219, 0.1); }
+        .nav-item:hover { opacity: 1; background: #222; }
+
+        /* VIEWS (TELAS) */
+        .view { flex: 1; height: 100vh; position: relative; display: none; overflow: hidden; }
+        .view.active { display: block; }
+
+        /* TELA DE DADOS - UI */
+        #ui-dice-box { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; background: var(--panel); padding: 18px; border-radius: 15px; z-index: 100; border: 1px solid #444; box-shadow: 0 0 25px rgba(0,0,0,0.7); }
+        .dice-btn { padding: 12px 18px; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; color: white; background: #2a2a2a; transition: 0.2s; min-width: 65px; font-size: 14px; }
+        .dice-btn:hover { background: #444; transform: translateY(-3px); }
         
-        /* Menu de Dados Inferior */
-        #ui { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; background: rgba(0,0,0,0.95); padding: 18px; border-radius: 15px; z-index: 100; border: 1px solid #444; box-shadow: 0 0 25px rgba(0,0,0,0.7); }
-        button { padding: 12px 18px; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; color: white; background: #2a2a2a; transition: all 0.2s ease; min-width: 65px; font-size: 14px; }
-        button:hover { background: #444; transform: translateY(-3px); box-shadow: 0 5px 10px rgba(0,0,0,0.5); }
-        
-        /* Cores dos Dados */
         .d4 { border-bottom: 4px solid #e74c3c; } .d6 { border-bottom: 4px solid #e67e22; } .d8 { border-bottom: 4px solid #f1c40f; }
         .d10 { border-bottom: 4px solid #9b59b6; } .d12 { border-bottom: 4px solid #2ecc71; } .d20 { border-bottom: 4px solid #3498db; }
 
-        /* Painel do Histórico */
         #side-panel { position: absolute; top: 20px; left: 20px; width: 300px; z-index: 10; display: flex; flex-direction: column; gap: 10px; }
-        #chat { max-height: 500px; background: rgba(0,0,0,0.85); border: 1px solid #333; border-radius: 12px; padding: 15px; overflow-y: auto; box-shadow: 5px 5px 20px rgba(0,0,0,0.6); }
-        #chat h3 { margin: 0 0 12px 0; font-size: 13px; color: #00ff00; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid #222; padding-bottom: 5px; }
-        
-        .btn-clear-chat { background: #1a1a1a; font-size: 11px; padding: 8px 12px; min-width: auto; align-self: flex-start; color: #eee; border: 1px solid #c0392b; border-radius: 5px; cursor: pointer; transition: 0.2s; }
-        .btn-clear-chat:hover { background: #c0392b; color: white; }
-
+        #chat { max-height: 500px; background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 15px; overflow-y: auto; box-shadow: 5px 5px 20px rgba(0,0,0,0.6); pointer-events: all; }
+        .btn-clear-chat { background: #1a1a1a; font-size: 11px; padding: 8px 12px; min-width: auto; align-self: flex-start; color: #eee; border: 1px solid #c0392b; border-radius: 5px; cursor: pointer; pointer-events: all; }
         .sum-entry { background: rgba(46, 204, 113, 0.1); border-left: 5px solid #2ecc71; padding: 12px; margin-bottom: 12px; border-radius: 6px; animation: slideIn 0.3s ease; }
         .sum-entry strong { font-size: 22px; color: #2ecc71; display: block; }
         .formula { color: #aaa; font-size: 13px; margin-top: 6px; font-family: monospace; display: block; }
 
-        /* MENU HAMBÚRGUER E CONFIGS */
-        #menu-btn { position: absolute; top: 20px; right: 20px; z-index: 1000; background: #222; border: 1px solid #444; padding: 10px; border-radius: 8px; cursor: pointer; font-size: 20px; transition: 0.3s; }
-        #menu-btn:hover { background: #333; border-color: #3498db; }
-        #config-panel { position: absolute; top: 70px; right: 20px; width: 250px; background: rgba(15,15,15,0.98); border: 1px solid #444; border-radius: 12px; padding: 20px; z-index: 999; display: none; box-shadow: -5px 5px 20px rgba(0,0,0,0.8); }
+        /* CONFIGURAÇÕES */
+        #menu-btn { position: absolute; top: 20px; right: 20px; z-index: 1000; background: #222; border: 1px solid #444; padding: 10px; border-radius: 8px; cursor: pointer; font-size: 20px; }
+        #config-panel { position: absolute; top: 70px; right: 20px; width: 250px; background: var(--panel); border: 1px solid #444; border-radius: 12px; padding: 20px; z-index: 999; display: none; }
         .config-group { margin-bottom: 18px; }
-        .config-group label { display: block; font-size: 11px; color: #3498db; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-        .config-group input { width: 100%; cursor: pointer; height: 4px; border-radius: 5px; background: #333; outline: none; -webkit-appearance: none; }
-        .config-group input::-webkit-slider-thumb { -webkit-appearance: none; width: 15px; height: 15px; background: #3498db; border-radius: 50%; cursor: pointer; }
-        .config-val { float: right; color: #fff; font-weight: bold; font-family: monospace; }
-        .btn-reset { width: 100%; padding: 10px; background: #c0392b; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 12px; margin-top: 5px; transition: 0.2s; }
-        .btn-reset:hover { background: #e74c3c; }
-        
+        .config-group label { display: block; font-size: 11px; color: var(--primary); text-transform: uppercase; margin-bottom: 8px; }
+        .config-val { float: right; color: #fff; font-weight: bold; }
+        .btn-reset { width: 100%; padding: 10px; background: #c0392b; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+
+        /* TELA DE FICHA E NOTAS */
+        .extra-view-container { background: #0f0f0f; height: 100vh; overflow-y: auto; padding: 40px; box-sizing: border-box; }
+        .sheet-card { background: #1a1a1a; padding: 30px; border-radius: 15px; border: 1px solid var(--border); max-width: 800px; margin: 0 auto; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        .field { margin-bottom: 20px; }
+        .field label { display: block; color: var(--primary); font-size: 11px; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
+        input, textarea { width: 100%; background: #222; border: 1px solid #444; color: white; padding: 12px; border-radius: 6px; box-sizing: border-box; outline: none; transition: 0.2s; }
+        input:focus, textarea:focus { border-color: var(--primary); }
+        .stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin: 20px 0; }
+
         @keyframes slideIn { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
     </style>
 </head>
 <body>
 
-    <div id="menu-btn" onclick="toggleConfig()">☰</div>
+    <nav id="sidebar">
+        <div class="nav-item active" onclick="switchView('dice', this)" title="Dados 3D">🎲</div>
+        <div class="nav-item" onclick="switchView('sheet', this)" title="Ficha">📜</div>
+        <div class="nav-item" onclick="switchView('notes', this)" title="Notas">✍️</div>
+    </nav>
 
-    <div id="config-panel">
-        <h4 style="margin:0 0 20px 0; color: #fff; font-size: 14px; border-bottom: 1px solid #333; padding-bottom: 10px;">CONFIGURAÇÕES FÍSICAS</h4>
-        <div class="config-group">
-            <label>Gravidade <span id="v-grav" class="config-val">-85</span></label>
-            <input type="range" id="grav" min="-200" max="-10" value="-85">
+    <div id="view-dice" class="view active">
+        <div id="menu-btn" onclick="toggleConfig()">☰</div>
+        <div id="config-panel">
+            <h4 style="margin:0 0 20px 0; border-bottom: 1px solid #333; padding-bottom: 10px;">FÍSICA DA MESA</h4>
+            <div class="config-group">
+                <label>Gravidade <span id="v-grav" class="config-val">-85</span></label>
+                <input type="range" id="grav" min="-200" max="-10" value="-85">
+            </div>
+            <div class="config-group">
+                <label>Impulso <span id="v-force" class="config-val">30</span></label>
+                <input type="range" id="force" min="10" max="100" value="30">
+            </div>
+            <div class="config-group">
+                <label>Giro (Damping) <span id="v-damp" class="config-val">0.7</span></label>
+                <input type="range" id="damp" min="0" max="1" step="0.1" value="0.7">
+            </div>
+            <div class="config-group">
+                <label>Sensib. Parada <span id="v-stop" class="config-val">0.4</span></label>
+                <input type="range" id="stop" min="0.1" max="2" step="0.1" value="0.4">
+            </div>
+            <button class="btn-reset" onclick="resetPhysics()">RESETAR PADRÃO ⚙️</button>
         </div>
-        <div class="config-group">
-            <label>Impulso <span id="v-force" class="config-val">30</span></label>
-            <input type="range" id="force" min="10" max="100" value="30">
+
+        <div id="side-panel">
+            <button class="btn-clear-chat" onclick="clearLog()">LIMPAR CHAT 🗑️</button>
+            <div id="chat">
+                <h3 style="margin: 0 0 12px 0; font-size: 13px; color: #00ff00; letter-spacing: 2px;">HISTÓRICO</h3>
+                <div id="log"></div>
+            </div>
         </div>
-        <div class="config-group">
-            <label>Giro (Damping) <span id="v-damp" class="config-val">0.7</span></label>
-            <input type="range" id="damp" min="0" max="1" step="0.1" value="0.7">
+
+        <div id="ui-dice-box">
+            <button class="dice-btn d4" onclick="rollDice('d4')">d4</button>
+            <button class="dice-btn d6" onclick="rollDice('d6')">d6</button>
+            <button class="dice-btn d8" onclick="rollDice('d8')">d8</button>
+            <button class="dice-btn d10" onclick="rollDice('d10')">d10</button>
+            <button class="dice-btn d12" onclick="rollDice('d12')">d12</button>
+            <button class="dice-btn d20" onclick="rollDice('d20')">d20</button>
+            <div style="width: 2px; background: #444; margin: 0 10px;"></div>
+            <button class="dice-btn" style="background: #27ae60;" onclick="rollAll()">ROLAR MESA</button>
+            <button class="dice-btn" style="background: #555;" onclick="clearTable()">LIMPAR MESA</button>
         </div>
-        <div class="config-group">
-            <label>Sensib. Parada <span id="v-stop" class="config-val">0.4</span></label>
-            <input type="range" id="stop" min="0.1" max="2" step="0.1" value="0.4">
-        </div>
-        <button class="btn-reset" onclick="resetPhysics()">RESETAR PADRÃO ⚙️</button>
     </div>
 
-    <div id="side-panel">
-        <button class="btn-clear-chat" onclick="clearLog()">LIMPAR CHAT 🗑️</button>
-        <div id="chat">
-            <h3>Histórico de Rolagens</h3>
-            <div id="log"></div>
+    <div id="view-sheet" class="view">
+        <div class="extra-view-container">
+            <div class="sheet-card">
+                <h1 style="margin:0 0 20px 0; font-size:24px; color:var(--primary)">Ficha de Personagem</h1>
+                <div class="field">
+                    <label>Nome do Personagem</label>
+                    <input type="text" id="char-name" placeholder="Ex: Lira Trigon">
+                </div>
+                <div class="stats-grid">
+                    <div class="field"><label>FOR</label><input type="number" class="char-stat" value="10"></div>
+                    <div class="field"><label>DES</label><input type="number" class="char-stat" value="10"></div>
+                    <div class="field"><label>CON</label><input type="number" class="char-stat" value="10"></div>
+                    <div class="field"><label>INT</label><input type="number" class="char-stat" value="10"></div>
+                    <div class="field"><label>SAB</label><input type="number" class="char-stat" value="10"></div>
+                    <div class="field"><label>CAR</label><input type="number" class="char-stat" value="10"></div>
+                </div>
+                <div class="field">
+                    <label>Inventário e Equipamentos</label>
+                    <textarea id="char-inventory" rows="8" placeholder="O que você carrega..."></textarea>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div id="ui">
-        <button class="d4" onclick="rollDice('d4')">d4</button>
-        <button class="d6" onclick="rollDice('d6')">d6</button>
-        <button class="d8" onclick="rollDice('d8')">d8</button>
-        <button class="d10" onclick="rollDice('d10')">d10</button>
-        <button class="d12" onclick="rollDice('d12')">d12</button>
-        <button class="d20" onclick="rollDice('d20')">d20</button>
-        <div style="width: 2px; background: #444; margin: 0 10px;"></div>
-        <button style="background: #27ae60;" onclick="rollAll()">ROLAR MESA</button>
-        <button style="background: #555;" onclick="clearTable()">LIMPAR MESA</button>
+    <div id="view-notes" class="view">
+        <div class="extra-view-container">
+            <div class="sheet-card">
+                <h1 style="margin:0 0 20px 0; font-size:24px; color:var(--primary)">Diário de Campanha</h1>
+                <textarea id="campaign-notes" style="height: 60vh; font-family: 'Courier New', Courier, monospace;" placeholder="Escreva aqui os eventos da sessão..."></textarea>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -94,50 +144,80 @@
     <script>
         let scene, camera, renderer, world, controls, dice = [];
         let needsSum = false;
-
-        // Padrões originais
         const DEFAULTS = { grav: -85, force: 30, damp: 0.7, stop: 0.4 };
         let cfg = { ...DEFAULTS };
 
+        // --- SISTEMA DE PERSISTÊNCIA (LOCAL STORAGE) ---
+        function saveAllData() {
+            const data = {
+                name: document.getElementById('char-name').value,
+                stats: Array.from(document.querySelectorAll('.char-stat')).map(i => i.value),
+                inventory: document.getElementById('char-inventory').value,
+                notes: document.getElementById('campaign-notes').value
+            };
+            localStorage.setItem('potenza_rpg_data', JSON.stringify(data));
+        }
+
+        function loadAllData() {
+            const saved = localStorage.getItem('potenza_rpg_data');
+            if (saved) {
+                const data = JSON.parse(saved);
+                document.getElementById('char-name').value = data.name || "";
+                const stats = document.querySelectorAll('.char-stat');
+                if(data.stats) data.stats.forEach((val, i) => { if(stats[i]) stats[i].value = val; });
+                document.getElementById('char-inventory').value = data.inventory || "";
+                document.getElementById('campaign-notes').value = data.notes || "";
+            }
+        }
+
+        // --- NAVEGAÇÃO ---
+        function switchView(id, el) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById('view-' + id).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            el.classList.add('active');
+            if(id === 'dice') onResize();
+        }
+
+        // --- CONFIGURAÇÕES FÍSICAS ---
         function toggleConfig() {
             const p = document.getElementById('config-panel');
             p.style.display = p.style.display === 'block' ? 'none' : 'block';
         }
 
-        function updateUIValues() {
+        function resetPhysics() {
+            cfg = { ...DEFAULTS };
+            world.gravity.set(0, cfg.grav, 0);
+            updateUI();
+        }
+
+        function updateUI() {
             document.getElementById('v-grav').innerText = cfg.grav;
             document.getElementById('v-force').innerText = cfg.force;
             document.getElementById('v-damp').innerText = cfg.damp;
             document.getElementById('v-stop').innerText = cfg.stop;
-            
             document.getElementById('grav').value = cfg.grav;
             document.getElementById('force').value = cfg.force;
             document.getElementById('damp').value = cfg.damp;
             document.getElementById('stop').value = cfg.stop;
         }
 
-        function resetPhysics() {
-            cfg = { ...DEFAULTS };
-            world.gravity.set(0, cfg.grav, 0);
-            updateUIValues();
-        }
-
-        // Listeners para sliders
         document.getElementById('grav').addEventListener('input', (e) => { cfg.grav = parseFloat(e.target.value); world.gravity.set(0, cfg.grav, 0); document.getElementById('v-grav').innerText = cfg.grav; });
         document.getElementById('force').addEventListener('input', (e) => { cfg.force = parseFloat(e.target.value); document.getElementById('v-force').innerText = cfg.force; });
         document.getElementById('damp').addEventListener('input', (e) => { cfg.damp = parseFloat(e.target.value); document.getElementById('v-damp').innerText = cfg.damp; });
         document.getElementById('stop').addEventListener('input', (e) => { cfg.stop = parseFloat(e.target.value); document.getElementById('v-stop').innerText = cfg.stop; });
 
+        // --- MOTOR 3D E FÍSICA ---
         function init() {
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0x080808);
             camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
-            camera.position.set(0, 30, 30);
+            camera.position.set(0, 35, 35);
 
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.shadowMap.enabled = true;
-            document.body.appendChild(renderer.domElement);
+            document.getElementById('view-dice').appendChild(renderer.domElement);
 
             controls = new THREE.OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
@@ -150,7 +230,7 @@
             world = new CANNON.World();
             world.gravity.set(0, cfg.grav, 0);
 
-            // Chão
+            // Chão Físico e Visual
             const floorBody = new CANNON.Body({ mass: 0, shape: new CANNON.Box(new CANNON.Vec3(25, 0.5, 25)) });
             world.addBody(floorBody);
             const floorMesh = new THREE.Mesh(new THREE.BoxGeometry(50, 1, 50), new THREE.MeshPhongMaterial({color: 0x111111}));
@@ -158,10 +238,16 @@
             scene.add(floorMesh);
 
             // Paredes Invisíveis
-            createWall(0, 5, 20, 50, 10, 1); createWall(0, 5, -20, 50, 10, 1);
-            createWall(20, 5, 0, 1, 10, 50); createWall(-20, 5, 0, 1, 10, 50);
+            createWall(0, 5, 25, 50, 10, 1); createWall(0, 5, -25, 50, 10, 1);
+            createWall(25, 5, 0, 1, 10, 50); createWall(-25, 5, 0, 1, 10, 50);
 
             animate();
+            loadAllData();
+            
+            // Ativa o auto-save
+            document.querySelectorAll('input, textarea').forEach(el => {
+                el.addEventListener('input', saveAllData);
+            });
         }
 
         function createWall(x, y, z, w, h, d) {
@@ -169,56 +255,48 @@
             body.position.set(x, y, z); world.addBody(body);
         }
 
-        function createLabelSprite(text, color) {
+        function createLabel(text, color) {
             const canvas = document.createElement('canvas');
             canvas.width = 128; canvas.height = 128;
             const ctx = canvas.getContext('2d');
-            ctx.fillStyle = 'rgba(0,0,0,0.85)';
-            ctx.beginPath(); ctx.arc(64, 64, 60, 0, Math.PI*2); ctx.fill();
-            ctx.fillStyle = color;
-            ctx.font = 'bold 80px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.fillStyle = 'rgba(0,0,0,0.85)'; ctx.beginPath(); ctx.arc(64,64,60,0,Math.PI*2); ctx.fill();
+            ctx.fillStyle = color; ctx.font = 'bold 80px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
             ctx.fillText(text, 64, 64);
-            const texture = new THREE.CanvasTexture(canvas);
-            const spriteMaterial = new THREE.SpriteMaterial({ map: texture, depthTest: false });
-            const sprite = new THREE.Sprite(spriteMaterial);
-            sprite.scale.set(3.2, 3.2, 1);
-            return sprite;
+            const sprite = new THREE.Sprite(new THREE.SpriteMaterial({map: new THREE.CanvasTexture(canvas), depthTest:false}));
+            sprite.scale.set(3.5, 3.5, 1); return sprite;
         }
 
         function rollDice(type) {
-            let geometry, shape, color;
             const size = 1.6;
             const colors = { d4: '#e74c3c', d6: '#e67e22', d8: '#f1c40f', d10: '#9b59b6', d12: '#2ecc71', d20: '#3498db' };
-            color = colors[type];
+            let geo, shape;
 
             switch(type) {
-                case 'd4': geometry = new THREE.TetrahedronGeometry(size); shape = new CANNON.Sphere(size*0.8); break;
-                case 'd6': geometry = new THREE.BoxGeometry(size, size, size); shape = new CANNON.Box(new CANNON.Vec3(size/2,size/2,size/2)); break;
-                case 'd8': geometry = new THREE.OctahedronGeometry(size); shape = new CANNON.Sphere(size*0.9); break;
-                case 'd10': geometry = new THREE.CylinderGeometry(0, size, size*1.3, 10); shape = new CANNON.Sphere(size); break;
-                case 'd12': geometry = new THREE.DodecahedronGeometry(size); shape = new CANNON.Sphere(size); break;
-                case 'd20': geometry = new THREE.IcosahedronGeometry(size, 0); shape = new CANNON.Sphere(size); break;
+                case 'd4': geo = new THREE.TetrahedronGeometry(size); shape = new CANNON.Sphere(size*0.8); break;
+                case 'd6': geo = new THREE.BoxGeometry(size, size, size); shape = new CANNON.Box(new CANNON.Vec3(size/2,size/2,size/2)); break;
+                case 'd8': geo = new THREE.OctahedronGeometry(size); shape = new CANNON.Sphere(size*0.9); break;
+                case 'd10': geo = new THREE.CylinderGeometry(0, size, size*1.3, 10); shape = new CANNON.Sphere(size); break;
+                case 'd12': geo = new THREE.DodecahedronGeometry(size); shape = new CANNON.Sphere(size); break;
+                case 'd20': geo = new THREE.IcosahedronGeometry(size, 0); shape = new CANNON.Sphere(size); break;
             }
 
-            const mesh = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({ color, shininess: 80 }));
+            const mesh = new THREE.Mesh(geo, new THREE.MeshPhongMaterial({ color: colors[type], shininess: 80 }));
             mesh.castShadow = true; scene.add(mesh);
 
-            const body = new CANNON.Body({ mass: 2, shape: shape, position: new CANNON.Vec3(0, 12, 0), linearDamping: 0.4, angularDamping: cfg.damp });
-            
+            const body = new CANNON.Body({ mass: 2, shape: shape, position: new CANNON.Vec3(0, 15, 0), linearDamping: 0.4, angularDamping: cfg.damp });
             body.velocity.set((Math.random()-0.5)*cfg.force, -30, (Math.random()-0.5)*cfg.force);
-            body.angularVelocity.set((Math.random()-0.5)*45, (Math.random()-0.5)*45, (Math.random()-0.5)*45);
+            body.angularVelocity.set((Math.random()-0.5)*50, (Math.random()-0.5)*50, (Math.random()-0.5)*50);
             
             world.addBody(body);
-            dice.push({ mesh, body, type, color, rolling: true, val: 0, label: null });
+            dice.push({ mesh, body, type, color: colors[type], rolling: true, val: 0, label: null });
             needsSum = true;
         }
 
         function rollAll() {
             dice.forEach(d => {
                 if(d.label) { scene.remove(d.label); d.label = null; }
-                d.body.position.set((Math.random()-0.5)*3, 12, (Math.random()-0.5)*3);
+                d.body.position.set((Math.random()-0.5)*5, 15, (Math.random()-0.5)*5);
                 d.body.velocity.set((Math.random()-0.5)*cfg.force, -30, (Math.random()-0.5)*cfg.force);
-                d.body.angularVelocity.set((Math.random()-0.5)*60, (Math.random()-0.5)*60, (Math.random()-0.5)*60);
                 d.body.angularDamping = cfg.damp;
                 d.rolling = true;
             });
@@ -239,28 +317,26 @@
                     d.rolling = false;
                     d.body.velocity.set(0,0,0); d.body.angularVelocity.set(0,0,0);
                     d.val = Math.floor(Math.random() * parseInt(d.type.substring(1))) + 1;
-                    d.label = createLabelSprite(d.val.toString(), d.color);
+                    d.label = createLabel(d.val.toString(), d.color);
                     scene.add(d.label);
                 } else if (motion >= cfg.stop) {
                     allStopped = false;
                     if(d.label) { scene.remove(d.label); d.label = null; }
                 }
-                
-                if(d.label) d.label.position.set(d.mesh.position.x, d.mesh.position.y + 3, d.mesh.position.z);
+                if(d.label) d.label.position.set(d.mesh.position.x, d.mesh.position.y + 3.5, d.mesh.position.z);
             });
 
-            if(allStopped && needsSum && dice.length > 0) { updateHistory(); needsSum = false; }
+            if(allStopped && needsSum && dice.length > 0) {
+                const log = document.getElementById('log');
+                let formula = []; let total = 0;
+                dice.forEach(d => { formula.push(`${d.type}(${d.val})`); total += d.val; });
+                const entry = document.createElement('div');
+                entry.className = 'sum-entry';
+                entry.innerHTML = `<strong>TOTAL: ${total}</strong><span class="formula">${formula.join(' + ')}</span>`;
+                log.prepend(entry);
+                needsSum = false;
+            }
             renderer.render(scene, camera);
-        }
-
-        function updateHistory() {
-            const log = document.getElementById('log');
-            let formula = []; let total = 0;
-            dice.forEach(d => { formula.push(`${d.type}(${d.val})`); total += d.val; });
-            const entry = document.createElement('div');
-            entry.className = 'sum-entry';
-            entry.innerHTML = `<strong>TOTAL: ${total}</strong><span class="formula">${formula.join(' + ')}</span>`;
-            log.prepend(entry);
         }
 
         function clearTable() {
@@ -269,9 +345,10 @@
         }
 
         function clearLog() { document.getElementById('log').innerHTML = ''; }
+        function onResize() { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); }
 
+        window.addEventListener('resize', onResize);
         init();
-        window.addEventListener('resize', () => { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
     </script>
 </body>
 </html>
