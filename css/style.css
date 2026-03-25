@@ -56,7 +56,7 @@ body {
     height: 100vh;
     position: relative;
     display: none;
-    overflow: hidden;
+    overflow: hidden; 
 }
 
 .view.active {
@@ -238,6 +238,34 @@ body {
     box-sizing: border-box;
 }
 
+.sheet-locked input, 
+.sheet-locked textarea {
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    color: #fff !important;
+    cursor: default;
+    padding-left: 0; /* Alinha o texto ao canto quando trancado */
+}
+
+/* Garante que o texto das notas continue visível no modo leitura */
+.sheet-locked #view-notes textarea,
+.sheet-locked #view-campaign textarea {
+    background: rgba(255, 255, 255, 0.02) !important;
+}
+
+/* Mantém os números em destaque */
+.sheet-locked .mod-main, 
+.sheet-locked .score-sub {
+    color: var(--primary) !important;
+    font-weight: bold;
+}
+
+/* Opcional: esconde os placeholders quando trancado 
+.sheet-locked ::placeholder {
+    color: transparent;
+}*/
+
 .dnd-grid {
     display: grid;
     grid-template-columns: 120px 300px 1fr 280px;
@@ -309,6 +337,37 @@ body {
     outline: none;
 }
 
+/* Container da barra de HP (o fundo cinza) */
+.hp-bar-container {
+    width: 100%;
+    height: 14px;
+    background: #1a1a1a;
+    border-radius: 7px;
+    border: 1px solid #333;
+    overflow: hidden;
+    margin-bottom: 12px;
+    position: relative;
+    display: flex; /* Alinha as barras em linha */
+}
+
+/* O preenchimento da barra (a parte colorida) */
+.hp-bar-fill {
+    height: 100%;
+    width: 100%;
+    background: #2ecc71;
+    transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.3s;
+    z-index: 2;
+}
+
+.hp-temp-fill {
+    height: 100%;
+    width: 0%; /* Começa em zero */
+    background: #f1c40f; /* Amarelo Ouro */
+    transition: width 0.5s ease; /* Efeito de "aparecer aos poucos" */
+    box-shadow: -2px 0 10px rgba(241, 196, 15, 0.4);
+    z-index: 1;
+}
+
 /* CAMPOS DE PERÍCIAS E TESTES (PADRONIZADOS) */
 .skill-item {
     display: flex;
@@ -341,7 +400,7 @@ body {
 }
 
 .mod-num-fixed {
-    width: 38px !important; /* Reduzi de 45px para 38px para ganhar espaço lateral */
+    width: 40px !important; /* Reduzi de 45px para 38px para ganhar espaço lateral */
     height: 24px !important;
     text-align: center;
     margin: 0 6px; /* Reduzi a margem de 10px para 6px */
@@ -412,7 +471,7 @@ body {
     border: 1px solid #333;
     border-radius: 10px;
     padding: 15px;
-    margin-bottom: 15px;
+    margin-bottom: 15px;   
 }
 
 .sheet-block h4 {
@@ -421,7 +480,24 @@ body {
     color: var(--primary);
     text-transform: uppercase;
     border-bottom: 1px solid #333;
-    padding-bottom: 5px;
+    padding-bottom: 5px;    
+}
+
+.sheet-block textarea {
+    width: 100%;     
+    resize: none;      
+    border: 1px solid #333;
+    background: #222;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    outline: none;     
+    display: block;    
+}
+
+.sheet-block textarea:focus {
+    border-color: var(--primary);
+    background: #2a2a2a;
 }
 
 /* INPUTS GERAIS */
@@ -445,6 +521,106 @@ input[type="number"] {
     padding: 8px;
     width: 100%;
     box-sizing: border-box;
+}
+
+/* Container que segura o toast (invisível por padrão) */
+.toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: none; /* Escondido */
+    animation: slideInUp 0.3s ease;
+}
+
+.master-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 20px;
+    align-items: start;
+}
+
+.init-controls {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 15px;
+}
+
+.init-controls input[type="text"] { flex: 3; }
+.init-controls input[type="number"] { flex: 1; text-align: center; }
+
+.monster-card {
+    background: #1a1a1a;
+    border-left: 5px solid #e67e22;
+    padding: 20px;
+    margin-top: 15px;
+    color: #ddd;
+}
+
+.m-header h2 { margin: 0; color: #e67e22; }
+.m-meta { font-style: italic; font-size: 0.9em; color: #888; }
+
+.m-stats-grid {
+    display: flex;
+    justify-content: space-between;
+    margin: 15px 0;
+    padding: 10px 0;
+    border-top: 1px solid #444;
+    border-bottom: 1px solid #444;
+}
+
+.search-box {
+    display: flex;
+    gap: 10px;
+}
+
+/* O corpo do toast */
+.toast {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: var(--panel);
+    border: 1px solid #2ecc71; /* Borda verde inicial */
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.8);
+}
+
+.toast.hp-low {
+    border-color: #e74c3c; /* Borda vermelha se HP estiver baixo */
+}
+
+.toast-icon {
+    font-size: 24px;
+}
+
+.toast-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.toast-title {
+    font-size: 11px;
+    color: #888;
+    text-transform: uppercase;
+}
+
+.toast-msg {
+    font-size: 16px;
+    color: #fff;
+    font-weight: bold;
+}
+
+/* Animação para aparecer */
+@keyframes slideInUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 /* ANIMAÇÃO */
