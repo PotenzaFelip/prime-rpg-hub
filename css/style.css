@@ -8,11 +8,12 @@
 
 body {
     margin: 0;
-    overflow: hidden;
+    overflow: hidden; 
     font-family: "Segoe UI", Tahoma, sans-serif;
     background: var(--bg);
     color: white;
     display: flex;
+    height: 100vh;
 }
 
 /* SIDEBAR */
@@ -26,6 +27,7 @@ body {
     padding-top: 20px;
     z-index: 2000;
     height: 100vh;
+    flex-shrink: 0; /* Impede que a sidebar esmague */
 }
 
 .nav-item {
@@ -56,7 +58,8 @@ body {
     height: 100vh;
     position: relative;
     display: none;
-    overflow: hidden; 
+    overflow-y: auto; /* Ajustado para permitir scroll na ficha */
+    -webkit-overflow-scrolling: touch;
 }
 
 .view.active {
@@ -99,24 +102,12 @@ body {
     transform: translateY(-3px);
 }
 
-.d4 {
-    border-bottom: 4px solid #e74c3c;
-}
-.d6 {
-    border-bottom: 4px solid #e67e22;
-}
-.d8 {
-    border-bottom: 4px solid #f1c40f;
-}
-.d10 {
-    border-bottom: 4px solid #9b59b6;
-}
-.d12 {
-    border-bottom: 4px solid #2ecc71;
-}
-.d20 {
-    border-bottom: 4px solid #3498db;
-}
+.d4 { border-bottom: 4px solid #e74c3c; }
+.d6 { border-bottom: 4px solid #e67e22; }
+.d8 { border-bottom: 4px solid #f1c40f; }
+.d10 { border-bottom: 4px solid #9b59b6; }
+.d12 { border-bottom: 4px solid #2ecc71; }
+.d20 { border-bottom: 4px solid #3498db; }
 
 #side-panel {
     position: absolute;
@@ -233,8 +224,7 @@ body {
 .sheet-container {
     padding: 30px;
     background: #0f0f0f;
-    height: 100vh;
-    overflow-y: auto;
+    min-height: 100vh;
     box-sizing: border-box;
 }
 
@@ -245,26 +235,19 @@ body {
     box-shadow: none !important;
     color: #fff !important;
     cursor: default;
-    padding-left: 0; /* Alinha o texto ao canto quando trancado */
+    padding-left: 0;
 }
 
-/* Garante que o texto das notas continue visível no modo leitura */
 .sheet-locked #view-notes textarea,
 .sheet-locked #view-campaign textarea {
     background: rgba(255, 255, 255, 0.02) !important;
 }
 
-/* Mantém os números em destaque */
 .sheet-locked .mod-main, 
 .sheet-locked .score-sub {
     color: var(--primary) !important;
     font-weight: bold;
 }
-
-/* Opcional: esconde os placeholders quando trancado 
-.sheet-locked ::placeholder {
-    color: transparent;
-}*/
 
 .dnd-grid {
     display: grid;
@@ -303,7 +286,7 @@ body {
 .attr-col {
     display: flex;
     flex-direction: column;
-    gap: 8px; /* Espaço pequeno entre as caixas */
+    gap: 8px;
 }
 
 .attr-box {
@@ -316,8 +299,8 @@ body {
     padding: 15px 5px;
     gap: 2px;
     width: 100px; 
-    height: 60px;    /* <--- Aumenta a altura para um valor fixo */
-    justify-content: space-around; /* Distribui o label e os inputs lá dentro */
+    height: 80px; /* Ajustado para caber o label e inputs */
+    justify-content: space-around;
 }
 
 .attr-box label {
@@ -337,7 +320,7 @@ body {
     outline: none;
 }
 
-/* Container da barra de HP (o fundo cinza) */
+/* HP BAR */
 .hp-bar-container {
     width: 100%;
     height: 14px;
@@ -347,10 +330,9 @@ body {
     overflow: hidden;
     margin-bottom: 12px;
     position: relative;
-    display: flex; /* Alinha as barras em linha */
+    display: flex;
 }
 
-/* O preenchimento da barra (a parte colorida) */
 .hp-bar-fill {
     height: 100%;
     width: 100%;
@@ -361,36 +343,34 @@ body {
 
 .hp-temp-fill {
     height: 100%;
-    width: 0%; /* Começa em zero */
-    background: #f1c40f; /* Amarelo Ouro */
-    transition: width 0.5s ease; /* Efeito de "aparecer aos poucos" */
+    width: 0%;
+    background: #f1c40f;
+    transition: width 0.5s ease;
     box-shadow: -2px 0 10px rgba(241, 196, 15, 0.4);
     z-index: 1;
 }
 
-/* CAMPOS DE PERÍCIAS E TESTES (PADRONIZADOS) */
+/* PERÍCIAS */
 .skill-item {
     display: flex;
     align-items: center;
-    font-size: 11px; /* Diminuímos levemente a fonte para caber nomes longos */
-    overflow: hidden; /* Garante que nada saia da div */
+    font-size: 11px;
+    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
 #skills-list {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Duas colunas */
-    gap: 4px 8px; /* Espaço reduzido entre colunas */
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 8px;
 }
 
-#insp,
-#prof {
-    width: 120px !important; /* Aumenta a largura significativamente */
-    height: 40px !important; /* Deixa mais alto para facilitar o clique */
-    font-size: 18px !important; /* Aumenta o número lá dentro */
-    background: rgba(255, 255, 255, 0.1); /* Um pouco mais claro que o resto */
-    /*border: 1px solid var(--primary); /* Borda com a cor principal (azul/verde) */
+#insp, #prof {
+    width: 120px !important;
+    height: 40px !important;
+    font-size: 18px !important;
+    background: rgba(255, 255, 255, 0.1);
 }
 
 #saves-list {
@@ -400,17 +380,18 @@ body {
 }
 
 .mod-num-fixed {
-    width: 40px !important; /* Reduzi de 45px para 38px para ganhar espaço lateral */
+    width: 40px !important;
     height: 24px !important;
     text-align: center;
-    margin: 0 6px; /* Reduzi a margem de 10px para 6px */
+    margin: 0 6px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid #444;
     color: white;
     border-radius: 4px;
     font-size: 12px;
-    flex-shrink: 0; /* Impede que o campo de número "encha" e esmague o texto */
+    flex-shrink: 0;
 }
+
 .mod-main {
     width: 100%;
     height: 30px;
@@ -421,6 +402,7 @@ body {
     color: #fff;
     font-weight: bold;
 }
+
 .score-sub {
     width: 40px;
     height: 18px;
@@ -432,17 +414,19 @@ body {
     color: #888;
     margin-top: 2px;
 }
+
 .score-badge {
     background: #222;
     border: 1px solid #666;
-    border-radius: 50%; /* Deixa redondinho o campo menor */
+    border-radius: 50%;
     width: 30px;
     height: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: -5px; /* Sobe um pouco para encostar no de cima */
+    margin-top: -5px;
 }
+
 .score-small {
     width: 100%;
     background: transparent;
@@ -451,7 +435,8 @@ body {
     text-align: center;
     font-size: 12px;
 }
-/* COMBATE */
+
+/* COMBATE E BLOCOS */
 .combat-row {
     display: flex;
     justify-content: space-between;
@@ -465,13 +450,12 @@ body {
     border: 2px solid var(--primary);
 }
 
-/* BLOCOS GERAIS */
 .sheet-block {
     background: #1a1a1a;
     border: 1px solid #333;
     border-radius: 10px;
     padding: 15px;
-    margin-bottom: 15px;   
+    margin-bottom: 15px;
 }
 
 .sheet-block h4 {
@@ -480,24 +464,19 @@ body {
     color: var(--primary);
     text-transform: uppercase;
     border-bottom: 1px solid #333;
-    padding-bottom: 5px;    
+    padding-bottom: 5px;
 }
 
 .sheet-block textarea {
-    width: 100%;     
-    resize: none;      
+    width: 100%;
+    resize: none;
     border: 1px solid #333;
     background: #222;
     color: #fff;
     padding: 10px;
     border-radius: 5px;
-    outline: none;     
-    display: block;    
-}
-
-.sheet-block textarea:focus {
-    border-color: var(--primary);
-    background: #2a2a2a;
+    outline: none;
+    display: block;
 }
 
 /* INPUTS GERAIS */
@@ -512,8 +491,7 @@ textarea {
     box-sizing: border-box;
 }
 
-input[type="text"],
-input[type="number"] {
+input[type="text"], input[type="number"] {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid #333;
     color: white;
@@ -523,114 +501,183 @@ input[type="number"] {
     box-sizing: border-box;
 }
 
-/* Container que segura o toast (invisível por padrão) */
+/* ==========================================
+   SISTEMA DE ZOOM DE ARTE (FLUTUANDO À ESQUERDA)
+   ========================================== */
+
+/* 1. Container que segura a foto original (miniatura) */
+.monster-img-wrapper {
+    transition: all 0.2s;
+    position: relative; /* FUNDAMENTAL: É o ponto de referência do zoom */
+    display: inline-block;
+    cursor: zoom-in;
+}
+
+/* 2. O Overlay de Zoom (A caixa que surge) */
+.monster-zoom-overlay {
+    display: none; /* Escondido por padrão */
+    position: absolute; /* Ancorado à div da miniatura */
+    
+    /* CENTRALIZAÇÃO VERTICAL */
+    top: 50%;
+    transform: translateY(-50%); /* Centraliza verticalmente em relação à foto original */
+    
+    /* NOVA POSIÇÃO: À ESQUERDA (Jogado para fora da miniatura) */
+    right: calc(100% + 15px); /* Move 100% para a esquerda + 15px de respiro */
+    
+    z-index: 5000; /* Fica na frente de TUDO */
+    
+    /* Estilo do Painel de Arte */
+    background: rgba(0, 0, 0, 0.95);
+    border: 3px solid var(--primary); /* Borda com a cor do tema */
+    border-radius: 12px;
+    padding: 8px;
+    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.9); /* Sombra pesada para a esquerda */
+    
+    pointer-events: none; /* Evita que o hover quebre se o mouse mover rápido */
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* 3. A Imagem Ampliada dentro do Overlay */
+.monster-zoom-overlay img {
+    /* Define o tamanho da imagem de zoom (não muito grande para não quebrar a tela) */
+    max-width: 550px;  /* Tamanho grande, mas que cabe à esquerda do bestiário */
+    max-height: 550px; /* Limite de altura */
+    
+    display: block;
+    border-radius: 6px;
+    object-fit: contain; /* Garante que a imagem não estique */
+}
+
+/* 4. Gatilho de Ativação (Hover) */
+.monster-img-wrapper:hover .monster-zoom-overlay {
+    display: block;
+    opacity: 1;
+}
+
+/* 5. Efeito visual na miniatura original ao passar o mouse */
+.monster-img-wrapper:hover #m-image {
+    border-color: var(--primary);
+    filter: brightness(1.2);
+}
+
+/* ==========================================
+   AJUSTE PARA MOBILE (RESPONSIVIDADE)
+   ========================================== */
+@media (max-width: 768px) {
+    /* No celular, o zoom para o lado não funciona. Melhor centralizar na tela. */
+    .monster-zoom-overlay {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        right: auto;
+        transform: translate(-50%, -50%) scale(0.9);
+        width: 90vw;
+        max-width: 90vw;
+    }
+    
+    .monster-zoom-overlay img {
+        max-width: 100%;
+        max-height: 70vh;
+    }
+}
+
+/* TOASTS */
 .toast-container {
     position: fixed;
     bottom: 20px;
     right: 20px;
     z-index: 9999;
-    display: none; /* Escondido */
+    display: none;
     animation: slideInUp 0.3s ease;
 }
 
-.master-layout {
-    display: grid;
-    grid-template-columns: 1fr 1.5fr;
-    gap: 20px;
-    align-items: start;
-}
-
-.init-controls {
-    display: flex;
-    gap: 5px;
-    margin-bottom: 15px;
-}
-
-.init-controls input[type="text"] { flex: 3; }
-.init-controls input[type="number"] { flex: 1; text-align: center; }
-
-.monster-card {
-    background: #1a1a1a;
-    border-left: 5px solid #e67e22;
-    padding: 20px;
-    margin-top: 15px;
-    color: #ddd;
-}
-
-.m-header h2 { margin: 0; color: #e67e22; }
-.m-meta { font-style: italic; font-size: 0.9em; color: #888; }
-
-.m-stats-grid {
-    display: flex;
-    justify-content: space-between;
-    margin: 15px 0;
-    padding: 10px 0;
-    border-top: 1px solid #444;
-    border-bottom: 1px solid #444;
-}
-
-.search-box {
-    display: flex;
-    gap: 10px;
-}
-
-/* O corpo do toast */
 .toast {
     display: flex;
     align-items: center;
     gap: 15px;
     background: var(--panel);
-    border: 1px solid #2ecc71; /* Borda verde inicial */
+    border: 1px solid #2ecc71;
     padding: 15px 20px;
     border-radius: 12px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.8);
 }
 
-.toast.hp-low {
-    border-color: #e74c3c; /* Borda vermelha se HP estiver baixo */
-}
-
-.toast-icon {
-    font-size: 24px;
-}
-
-.toast-content {
-    display: flex;
-    flex-direction: column;
-}
-
-.toast-title {
-    font-size: 11px;
-    color: #888;
-    text-transform: uppercase;
-}
-
-.toast-msg {
-    font-size: 16px;
-    color: #fff;
-    font-weight: bold;
-}
-
-/* Animação para aparecer */
+/* ANIMAÇÕES */
 @keyframes slideInUp {
-    from {
-        transform: translateY(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
 
-/* ANIMAÇÃO */
 @keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateX(-30px);
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* ==========================================
+   AJUSTES DE RESPONSIVIDADE (MOBILE)
+   ========================================== */
+@media (max-width: 850px) {
+    body {
+        flex-direction: column; /* Sidebar vai para o topo */
     }
-    to {
-        opacity: 1;
-        transform: translateX(0);
+
+    #sidebar {
+        width: 100%;
+        height: 60px;
+        flex-direction: row;
+        padding-top: 0;
+        justify-content: space-around;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .nav-item {
+        margin-bottom: 0;
+    }
+
+    .dnd-grid {
+        grid-template-columns: 1fr; /* Tudo vira uma coluna só */
+        padding: 10px;
+    }
+
+    .sheet-header {
+        grid-template-columns: 1fr;
+    }
+
+    .attr-col {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* 3 atributos por linha no mobile */
+        gap: 10px;
+        width: 100%;
+    }
+
+    .attr-box {
+        width: 100%;
+    }
+
+    #ui-dice-box {
+        width: 90%;
+        bottom: 10px;
+        padding: 10px;
+    }
+
+    .dice-btn {
+        flex: 1 1 30%;
+        min-width: 50px;
+    }
+
+    #side-panel {
+        position: relative;
+        width: 100%;
+        left: 0;
+        top: 0;
+        padding: 10px;
+    }
+    
+    /* Prevenção de Zoom no Mobile */
+    input, textarea {
+        font-size: 16px !important;
     }
 }

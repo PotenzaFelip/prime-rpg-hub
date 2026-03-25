@@ -8,7 +8,7 @@ Uma aplicação web completa, leve e expansível para jogadores e mestres de RPG
 
 ## 🚀 Funcionalidades Principais
 
-* **🎲 Simulador de Dados 3D:** Rolagens realistas (D4 a D100) usando `Three.js` e `Cannon.js` com detecção inteligente de resultados.
+* **🎲 Simulador de Dados 3D:** Rolagens realistas (D4 a D20) usando `Three.js` e `Cannon.js` com detecção inteligente de resultados.
 * **⚔️ Combat Tracker:** Sistema de ordem de iniciativa integrado para mestres, com controle de CA, HP e Ações em tempo real.
 * **🐉 Bestiário Personalizável:** Banco de dados de monstros com suporte a **URLs de imagens externas**. Cadastre, edite e adicione monstros diretamente ao combate.
 * **📜 Ficha de Personagem:** Gerenciamento completo de atributos, perícias e inventário com interface Dark Mode.

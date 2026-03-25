@@ -266,3 +266,40 @@ document.addEventListener('DOMContentLoaded', () => {
     renderBestiary();
     renderInitiative();
 });
+
+window.showMonsterDetail = function(name) {
+    const mob = localBestiary.find(m => m.name === name);
+    if (!mob) return;
+
+    document.getElementById('m-name').innerText = mob.name;
+    document.getElementById('m-ac').innerText = mob.ac;
+    document.getElementById('m-hp').innerText = mob.hp;
+    document.getElementById('m-actions').innerText = mob.actions;
+    
+    const imgUrl = mob.image || IMG_FALLBACK;
+    const imgElement = document.getElementById('m-image');
+    const imgZoomElement = document.getElementById('m-image-zoom'); // NOVA LINHA
+
+    if (imgElement) {
+        imgElement.src = imgUrl;
+        imgElement.style.display = 'inline-block';
+
+        // Caso a imagem dê erro, carrega o fallback em ambas
+        imgElement.onerror = function() {
+            this.src = IMG_FALLBACK;
+            if (imgZoomElement) imgZoomElement.src = IMG_FALLBACK;
+            this.onerror = null;
+        };
+    }
+
+    // Alimenta a imagem do Zoom (que fica escondida esperando o hover)
+    if (imgZoomElement) {
+        imgZoomElement.src = imgUrl;
+    }
+
+    document.getElementById('monster-display').style.display = 'block';
+    
+    // Configura os botões de ação do card
+    document.getElementById('add-to-init-btn').onclick = () => addCombatant(mob);
+    document.getElementById('edit-mob-btn').onclick = () => prepareEdit(mob.name);
+};

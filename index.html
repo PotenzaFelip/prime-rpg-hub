@@ -281,93 +281,87 @@
     </div>
 
     <div id="view-master" class="view">
-        <div class="sheet-container master-layout">
+    <div class="sheet-container dnd-grid" style="grid-template-columns: 1fr 1fr; align-items: start;">
 
-            <div class="master-col">
-                <div class="sheet-block">
-                    <h4>⚔️ Ordem de Iniciativa</h4>
-                    <div class="init-controls">
-                        <input type="text" id="init-name" placeholder="Nome (Ex: Goblin 1)">
-                        <input type="number" id="init-value" placeholder="Ini">
-                        <button class="dice-btn" onclick="addCombatant()">+</button>
-                    </div>
+        <div class="master-col">
+            <div class="sheet-block">
+                <h4>⚔️ Ordem de Iniciativa</h4>
+                <div class="init-controls">
+                    <input type="text" id="init-name" placeholder="Nome (Ex: Goblin 1)">
+                    <input type="number" id="init-value" placeholder="Ini">
+                    <button class="dice-btn" onclick="addCombatant()">+</button>
+                </div>
 
-                    <div id="init-list" class="item-list"></div>
+                <div id="init-list" class="item-list" style="margin-top: 15px;"></div>
 
-                    <div style="display: flex; gap: 10px; margin-top: 15px;">
-                        <button class="dice-btn" style="flex: 2;" onclick="sortInitiative()">ORDENAR 🎲</button>
-                        <button class="dice-btn" style="flex: 1; background: #c0392b;"
-                            onclick="clearInitiative()">LIMPAR</button>
-                    </div>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="dice-btn" style="flex: 2;" onclick="sortInitiative()">ORDENAR 🎲</button>
+                    <button class="dice-btn" style="flex: 1; background: #c0392b;"
+                        onclick="clearInitiative()">LIMPAR</button>
                 </div>
             </div>
-
-            <div class="master-col">
-                <div class="sheet-block" style="margin-bottom: 20px;">
-                    <h4>📝 Cadastrar Novo Monstro</h4>
-                    <div class="init-controls" style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
-                        <input type="hidden" id="reg-id">
-                        <input type="text" id="reg-name" placeholder="Nome do Mob" style="grid-column: span 2;">
-
-                        <input type="text" id="reg-image" placeholder="URL da Imagem (Opcional)"
-                            style="grid-column: span 2;">
-
-                        <input type="text" id="reg-ac" placeholder="CA">
-                        <input type="text" id="reg-hp" placeholder="HP">
-                        <textarea id="reg-actions" placeholder="Ações/Ataques"
-                            style="grid-column: span 2; height: 50px;"></textarea>
-
-                        <button class="dice-btn" id="btn-save-mob" onclick="registerMonster()"
-                            style="grid-column: span 2; background: #27ae60;">SALVAR NO BESTIÁRIO</button>
-                    </div>
-                </div>
-
-                <div class="sheet-block">
-                    <h4>🐉 Consulta de Bestiário</h4>
-                    <div class="search-box">
-                        <input type="text" id="monster-search" placeholder="Pesquisar na sua lista..."
-                            oninput="searchMonster()">
-                        <button class="dice-btn" onclick="searchMonster()">🔍</button>
-                    </div>
-
-                    <div id="monster-display" class="monster-card"
-                        style="display:none; margin-top: 15px; position: relative; border: 1px solid #444; padding: 15px; background: #1a1a1a;">
-
-                        <button onclick="this.parentElement.style.display='none'"
-                            style="position: absolute; top: 10px; right: 10px; background: none; border: none; color: #888; cursor: pointer; font-size: 18px; font-weight: bold;">✕</button>
-
-                        <div class="m-header" style="text-align: center; margin-bottom: 10px;">
-                            <img id="m-image" src="" alt=""
-                                style="display:none; max-width: 130px; border-radius: 5px; border: 1px solid #333; margin-bottom: 10px;">
-                            <h2 id="m-name" style="margin: 0; color: #00ff00;"></h2>
-                        </div>
-
-                        <div class="m-stats-grid"
-                            style="display: flex; justify-content: center; gap: 20px; margin-bottom: 10px;">
-                            <div class="m-stat"><strong>CA:</strong> <span id="m-ac"></span></div>
-                            <div class="m-stat"><strong>HP:</strong> <span id="m-hp"></span></div>
-                        </div>
-
-                        <div class="m-section" style="border-top: 1px solid #333; padding-top: 10px;">
-                            <strong>Ações:</strong>
-                            <div id="m-actions"
-                                style="font-size: 0.9em; color: #ccc; margin-top: 5px; white-space: pre-wrap;"></div>
-                        </div>
-
-                        <div style="display: flex; gap: 5px; margin-top: 15px;">
-                            <button class="dice-btn" id="add-to-init-btn"
-                                style="flex: 2; background: #2980b9;">ADICIONAR À INICIATIVA</button>
-                            <button class="dice-btn" id="edit-mob-btn" style="flex: 1; background: #f39c12;">EDITAR
-                                ✏️</button>
-                        </div>
-                    </div>
-
-                    <div id="search-results-list" style="margin-top: 10px;"></div>
-                </div>
-            </div>
-
         </div>
-    </div>
+
+        <div class="master-col" style="display: flex; flex-direction: column; gap: 20px;">
+            
+            <div class="sheet-block">
+                <h4>📝 Cadastrar Novo Monstro</h4>
+                <div class="init-controls" style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
+                    <input type="hidden" id="reg-id">
+                    <input type="text" id="reg-name" placeholder="Nome do Mob" style="grid-column: span 2;">
+                    <input type="text" id="reg-image" placeholder="URL da Imagem (Opcional)" style="grid-column: span 2;">
+                    <input type="text" id="reg-ac" placeholder="CA">
+                    <input type="text" id="reg-hp" placeholder="HP">
+                    <textarea id="reg-actions" placeholder="Ações/Ataques" style="grid-column: span 2; height: 50px;"></textarea>
+                    <button class="dice-btn" id="btn-save-mob" onclick="registerMonster()"
+                        style="grid-column: span 2; background: #27ae60;">SALVAR NO BESTIÁRIO</button>
+                </div>
+            </div>
+
+            <div class="sheet-block">
+                <h4>🐉 Consulta de Bestiário</h4>
+                <div class="search-box" style="display: flex; gap: 5px;">
+                    <input type="text" id="monster-search" placeholder="Pesquisar..." oninput="searchMonster()" style="flex: 1;">
+                    <button class="dice-btn" onclick="searchMonster()">🔍</button>
+                </div>
+
+                <div id="monster-display" class="monster-card"
+                    style="display:none; margin-top: 15px; position: relative; border: 1px solid #444; padding: 15px; background: #1a1a1a;">
+
+                    <button onclick="this.parentElement.style.display='none'"
+                        style="position: absolute; top: 10px; right: 10px; background: none; border: none; color: #888; cursor: pointer; font-size: 18px; font-weight: bold;">✕</button>
+
+                    <div class="m-header" style="text-align: center; margin-bottom: 10px;">
+                        <div class="monster-img-wrapper" style="position: relative; display: inline-block;">
+                            <img id="m-image" src="" alt=""
+                                style="display:none; max-width: 130px; border-radius: 5px; border: 1px solid #333; margin-bottom: 10px; cursor: zoom-in;">
+                            <div class="monster-zoom-overlay">
+                                <img id="m-image-zoom" src="" alt="Zoom do Monstro">
+                            </div>
+                        </div>
+                        <h2 id="m-name" style="margin: 0; color: #00ff00;"></h2>
+                    </div>
+
+                    <div class="m-stats-grid" style="display: flex; justify-content: center; gap: 20px; margin-bottom: 10px;">
+                        <div class="m-stat"><strong>CA:</strong> <span id="m-ac"></span></div>
+                        <div class="m-stat"><strong>HP:</strong> <span id="m-hp"></span></div>
+                    </div>
+
+                    <div class="m-section" style="border-top: 1px solid #333; padding-top: 10px;">
+                        <strong>Ações:</strong>
+                        <div id="m-actions" style="font-size: 0.9em; color: #ccc; margin-top: 5px; white-space: pre-wrap;"></div>
+                    </div>
+
+                    <div style="display: flex; gap: 5px; margin-top: 15px;">
+                        <button class="dice-btn" id="add-to-init-btn" style="flex: 2; background: #2980b9;">ADICIONAR À INICIATIVA</button>
+                        <button class="dice-btn" id="edit-mob-btn" style="flex: 1; background: #f39c12;">EDITAR ✏️</button>
+                    </div>
+                </div>
+
+                <div id="search-results-list" style="margin-top: 10px;"></div>
+            </div>
+        </div> </div>
+</div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cannon.js/0.6.2/cannon.min.js"></script>
