@@ -2,7 +2,7 @@
 
 Uma aplicação web completa e leve para jogadores e mestres de RPG. Conta com um simulador de dados 3D com física realista, ficha de personagem editável e diário de campanha, tudo com salvamento automático local.
 
-![Versão](https://img.shields.io/badge/version-1.2.0-blue)
+![Versão](https://img.shields.io/badge/version-1.4.0-blue)
 ![GitHub License](https://img.shields.io/github/license/PotenzaFelip/dice-roller-rpg)
 ![GitHub Pages](https://img.shields.io/badge/Deploy-GitHub%20Pages-brightgreen)
 
