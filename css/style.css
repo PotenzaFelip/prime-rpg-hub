@@ -1,0 +1,460 @@
+:root {
+    --primary: #3498db;
+    --bg: #0a0a0a;
+    --panel: rgba(10, 10, 10, 0.98);
+    --border: #333;
+    --accent: #e74c3c;
+}
+
+body {
+    margin: 0;
+    overflow: hidden;
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    background: var(--bg);
+    color: white;
+    display: flex;
+}
+
+/* SIDEBAR */
+#sidebar {
+    width: 70px;
+    background: #111;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+    z-index: 2000;
+    height: 100vh;
+}
+
+.nav-item {
+    margin-bottom: 25px;
+    cursor: pointer;
+    font-size: 24px;
+    opacity: 0.4;
+    transition: 0.3s;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.nav-item.active {
+    opacity: 1;
+    color: var(--primary);
+    background: rgba(52, 152, 219, 0.1);
+}
+
+.nav-item:hover {
+    opacity: 1;
+    background: #222;
+}
+
+/* VIEWS */
+.view {
+    flex: 1;
+    height: 100vh;
+    position: relative;
+    display: none;
+    overflow: hidden;
+}
+
+.view.active {
+    display: block;
+}
+
+/* TELA DE DADOS */
+#ui-dice-box {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    background: var(--panel);
+    padding: 18px;
+    border-radius: 15px;
+    z-index: 100;
+    border: 1px solid #444;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.7);
+}
+
+.dice-btn {
+    padding: 12px 18px;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    color: white;
+    background: #2a2a2a;
+    transition: 0.2s;
+    min-width: 65px;
+    font-size: 14px;
+}
+
+.dice-btn:hover {
+    background: #444;
+    transform: translateY(-3px);
+}
+
+.d4 {
+    border-bottom: 4px solid #e74c3c;
+}
+.d6 {
+    border-bottom: 4px solid #e67e22;
+}
+.d8 {
+    border-bottom: 4px solid #f1c40f;
+}
+.d10 {
+    border-bottom: 4px solid #9b59b6;
+}
+.d12 {
+    border-bottom: 4px solid #2ecc71;
+}
+.d20 {
+    border-bottom: 4px solid #3498db;
+}
+
+#side-panel {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 300px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#chat {
+    max-height: 500px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 15px;
+    overflow-y: auto;
+    box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.6);
+    pointer-events: all;
+}
+
+.sum-entry {
+    background: rgba(46, 204, 113, 0.1);
+    border-left: 5px solid #2ecc71;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 6px;
+    animation: slideIn 0.3s ease;
+}
+
+.sum-entry strong {
+    font-size: 22px;
+    color: #2ecc71;
+    display: block;
+}
+
+.formula {
+    color: #aaa;
+    font-size: 13px;
+    margin-top: 6px;
+    font-family: monospace;
+    display: block;
+}
+
+/* CONFIGS FÍSICA */
+#menu-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: #222;
+    border: 1px solid #444;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+#config-panel {
+    position: absolute;
+    top: 70px;
+    right: 20px;
+    width: 250px;
+    background: var(--panel);
+    border: 1px solid #444;
+    border-radius: 12px;
+    padding: 20px;
+    z-index: 999;
+    display: none;
+}
+
+.config-group {
+    margin-bottom: 15px;
+    font-size: 12px;
+}
+
+.config-val {
+    float: right;
+    color: var(--primary);
+    font-weight: bold;
+}
+
+.btn-reset {
+    width: 100%;
+    padding: 8px;
+    background: #444;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.btn-clear-chat {
+    background: #1a1a1a;
+    font-size: 11px;
+    padding: 8px 12px;
+    min-width: auto;
+    align-self: flex-start;
+    color: #eee;
+    border: 1px solid #c0392b;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-clear-chat:hover {
+    background: #c0392b;
+    color: white;
+}
+
+/* FICHA TIPO D&D - ESTRUTURA PRINCIPAL */
+.sheet-container {
+    padding: 30px;
+    background: #0f0f0f;
+    height: 100vh;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+.dnd-grid {
+    display: grid;
+    grid-template-columns: 120px 300px 1fr 280px;
+    gap: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.sheet-header {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1.5fr 3fr;
+    gap: 20px;
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.header-box {
+    background: #1a1a1a;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #333;
+}
+
+.header-box label {
+    font-size: 10px;
+    color: var(--primary);
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* COLUNA DE ATRIBUTOS */
+.attr-col {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Espaço pequeno entre as caixas */
+}
+
+.attr-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid #444;
+    border-radius: 6px;
+    padding: 15px 5px;
+    gap: 2px;
+    width: 100px; 
+    height: 60px;    /* <--- Aumenta a altura para um valor fixo */
+    justify-content: space-around; /* Distribui o label e os inputs lá dentro */
+}
+
+.attr-box label {
+    font-size: 9px;
+    color: #aaa;
+    margin-bottom: 2px;
+}
+
+.attr-box input {
+    width: 60px;
+    font-size: 24px;
+    text-align: center;
+    background: none;
+    border: none;
+    color: white;
+    font-weight: bold;
+    outline: none;
+}
+
+/* CAMPOS DE PERÍCIAS E TESTES (PADRONIZADOS) */
+.skill-item {
+    display: flex;
+    align-items: center;
+    font-size: 11px; /* Diminuímos levemente a fonte para caber nomes longos */
+    overflow: hidden; /* Garante que nada saia da div */
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#skills-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Duas colunas */
+    gap: 4px 8px; /* Espaço reduzido entre colunas */
+}
+
+#insp,
+#prof {
+    width: 120px !important; /* Aumenta a largura significativamente */
+    height: 40px !important; /* Deixa mais alto para facilitar o clique */
+    font-size: 18px !important; /* Aumenta o número lá dentro */
+    background: rgba(255, 255, 255, 0.1); /* Um pouco mais claro que o resto */
+    /*border: 1px solid var(--primary); /* Borda com a cor principal (azul/verde) */
+}
+
+#saves-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.mod-num-fixed {
+    width: 38px !important; /* Reduzi de 45px para 38px para ganhar espaço lateral */
+    height: 24px !important;
+    text-align: center;
+    margin: 0 6px; /* Reduzi a margem de 10px para 6px */
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid #444;
+    color: white;
+    border-radius: 4px;
+    font-size: 12px;
+    flex-shrink: 0; /* Impede que o campo de número "encha" e esmague o texto */
+}
+.mod-main {
+    width: 100%;
+    height: 30px;
+    font-size: 20px !important;
+    text-align: center;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-weight: bold;
+}
+.score-sub {
+    width: 40px;
+    height: 18px;
+    font-size: 11px !important;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid #555;
+    border-radius: 4px;
+    color: #888;
+    margin-top: 2px;
+}
+.score-badge {
+    background: #222;
+    border: 1px solid #666;
+    border-radius: 50%; /* Deixa redondinho o campo menor */
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: -5px; /* Sobe um pouco para encostar no de cima */
+}
+.score-small {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: #aaa;
+    text-align: center;
+    font-size: 12px;
+}
+/* COMBATE */
+.combat-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.combat-box input {
+    text-align: center;
+    font-weight: bold;
+    border-radius: 8px;
+    border: 2px solid var(--primary);
+}
+
+/* BLOCOS GERAIS */
+.sheet-block {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.sheet-block h4 {
+    margin: 0 0 12px 0;
+    font-size: 11px;
+    color: var(--primary);
+    text-transform: uppercase;
+    border-bottom: 1px solid #333;
+    padding-bottom: 5px;
+}
+
+/* INPUTS GERAIS */
+textarea {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid #222;
+    color: #ddd;
+    width: 100%;
+    resize: vertical;
+    padding: 10px;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+input[type="text"],
+input[type="number"] {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid #333;
+    color: white;
+    border-radius: 4px;
+    padding: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ANIMAÇÃO */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
